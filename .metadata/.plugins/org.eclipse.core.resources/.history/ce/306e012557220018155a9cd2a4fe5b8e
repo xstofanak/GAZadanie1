@@ -1,0 +1,19 @@
+package fiit.stuba;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
+public class Partition {
+	
+	
+	private int ID;
+	
+	public Partition(int iD) {
+		super();
+		ID = iD;
+	}
+	private ArrayList<Vertex> verteces =  new ArrayList<>();
+	//private Map<vertex, Boolean> availability =  new HashMap<>();
+	
+}

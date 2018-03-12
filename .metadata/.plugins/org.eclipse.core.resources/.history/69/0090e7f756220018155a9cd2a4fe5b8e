@@ -1,0 +1,18 @@
+package fiit.stuba;
+
+import java.util.HashMap;
+import java.util.Map;
+
+public class Vertex {
+	
+	private int ID;
+	
+	public Vertex(int iD) {
+		super();
+		ID = iD;
+	}
+	
+	private Map<Vertex, Partition> neighbour =  new HashMap<>();
+	private Map<Vertex, Boolean> avaiability =  new HashMap<>();
+	
+}
