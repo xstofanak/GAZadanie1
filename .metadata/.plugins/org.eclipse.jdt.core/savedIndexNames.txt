@@ -5,13 +5,12 @@ INDEX VERSION 1.130+C:\Users\peter\GAZadanie1\.metadata\.plugins\org.eclipse.jdt
 2147801284.index
 4167802264.index
 3335751325.index
-1069399176.index
 3966524131.index
+1069399176.index
 142444270.index
 3988866523.index
 2748733375.index
 2051884769.index
-2803343675.index
 368682434.index
 1594905321.index
 865741978.index
