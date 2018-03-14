@@ -51,7 +51,7 @@ public class main {
 		
 		
 		int n = partition_3.getVerteces().size();
-		printCombination(partition_3.getVerteces(), n, numberOfD);
+		printCombination(partition_2.getVerteces(), n, numberOfD);
 		
 	}
 	

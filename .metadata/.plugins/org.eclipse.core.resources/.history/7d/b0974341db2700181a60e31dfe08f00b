@@ -50,8 +50,9 @@ public class main {
 		}
 		
 		
-		int n = partition_3.getVerteces().size();
-		printCombination(partition_3.getVerteces(), n, numberOfD);
+		int r = 2;
+		int n = partition_2.getVerteces().size();
+		printCombination(partition_2.getVerteces(), n, r);
 		
 	}
 	
@@ -62,7 +63,7 @@ public class main {
 				if (index == r){
 					
 				for (int j=0; j<r; j++)
-					System.out.print(data.get(j).getID()+" ");
+					System.out.print(data.get(j)+" ");
 					System.out.println("");
 					return;
 				}

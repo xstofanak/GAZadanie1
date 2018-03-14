@@ -5,17 +5,12 @@ import java.util.Objects;
 import java.util.Set;
 
 public class Vertex {
-	public int getID() {
-		return ID;
-	}
-
 	private int ID;
 	private final Set<Vertex> neighbours = new HashSet<>();
 	private Partition partition;
 
 	public Vertex(int iD) {
 		super();
-		this.ID = iD;
 	}
 
 	public boolean addNeighbour(Vertex neighbour) {
@@ -23,10 +18,7 @@ public class Vertex {
 				.filter(vertex -> vertex.getPartition().equals(partition))
 				.count();
 		if (count < partition.getD()) {
-			if(neighbour.addNeighbour(this)) {
-				neighbours.add(neighbour);
-			}
-			
+			neighbours.add(neighbour);
 			return true;
 		} else {
 			return false;

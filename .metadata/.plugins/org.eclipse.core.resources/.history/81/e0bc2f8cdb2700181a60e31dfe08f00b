@@ -50,8 +50,9 @@ public class main {
 		}
 		
 		
-		int n = partition_3.getVerteces().size();
-		printCombination(partition_3.getVerteces(), n, numberOfD);
+		int r = 2;
+		int n = partition_2.getVerteces().size();
+		printCombination(partition_2.getVerteces(), n, r);
 		
 	}
 	

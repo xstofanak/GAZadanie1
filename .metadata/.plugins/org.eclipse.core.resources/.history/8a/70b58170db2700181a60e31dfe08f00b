@@ -15,7 +15,6 @@ public class Vertex {
 
 	public Vertex(int iD) {
 		super();
-		this.ID = iD;
 	}
 
 	public boolean addNeighbour(Vertex neighbour) {

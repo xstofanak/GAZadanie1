@@ -15,10 +15,6 @@ public class Partition {
 	
 	private ArrayList<Vertex> verteces =  new ArrayList<>();
 	
-	public ArrayList<Vertex> getVerteces() {
-		return verteces;
-	}
-
 	public void addVertex(Vertex a) {
 		verteces.add(a);
 		a.setPartition(this);
