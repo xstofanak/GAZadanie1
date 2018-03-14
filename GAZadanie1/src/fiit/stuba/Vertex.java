@@ -1,33 +1,24 @@
 package fiit.stuba;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 public class Vertex {
-	
 	private int ID;
+	private final Set<Vertex> neighbours = new HashSet<>();
 	private Partition partition;
-	
+
 	public Vertex(int iD) {
 		super();
 	}
-	
-	private Set<Vertex> neighbour =  new HashSet<>();
-	private Map<Vertex, Boolean> avaiability =  new HashMap<>();
-	
+
 	public boolean addNeighbour(Vertex neighbour) {
-		if(avaiability.get(neighbour)) {
-			avaiability.put(neighbour, true);
-			long count = neighbour.getNeighbour().stream()
-					.filter(vertex -> vertex.getPartition().equals(partition))
-					.count();
-			if (count == partition.getD()) {
-				avaiability.replace(neighbour, false);
-			}
+		long count = neighbour.getNeighbours().stream()
+				.filter(vertex -> vertex.getPartition().equals(partition))
+				.count();
+		if (count < partition.getD()) {
+			neighbours.add(neighbour);
 			return true;
 		} else {
 			return false;
@@ -38,13 +29,25 @@ public class Vertex {
 		return partition;
 	}
 
-	public Set<Vertex> getNeighbour() {
-		return neighbour;
+	public Set<Vertex> getNeighbours() {
+		return neighbours;
 	}
 
-	public void setPartiion(Partition partition2) {
-		this.partition = partition2;
-		
+	public void setPartition(Partition partition) {
+		this.partition = partition;
 	}
-		
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		Vertex vertex = (Vertex) o;
+		return ID == vertex.ID &&
+				Objects.equals(partition, vertex.partition);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(ID, partition);
+	}
 }
