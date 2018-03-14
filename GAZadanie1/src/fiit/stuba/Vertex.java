@@ -19,16 +19,18 @@ public class Vertex {
 	private Set<Vertex> neighbour =  new HashSet<>();
 	private Map<Vertex, Boolean> avaiability =  new HashMap<>();
 	
-	public void addNeighbour(Vertex a) {
-		if(avaiability.get(a)) {
-			long count = a.getNeighbour().stream()
+	public boolean addNeighbour(Vertex neighbour) {
+		if(avaiability.get(neighbour)) {
+			avaiability.put(neighbour, true);
+			long count = neighbour.getNeighbour().stream()
 					.filter(vertex -> vertex.getPartition().equals(partition))
 					.count();
-				if(count == partition.getD()) {
-					avaiability.replace(a, false);
-				}
+			if (count == partition.getD()) {
+				avaiability.replace(neighbour, false);
+			}
+			return true;
 		} else {
-			
+			return false;
 		}
 	}
 
