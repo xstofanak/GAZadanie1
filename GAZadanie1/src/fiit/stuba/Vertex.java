@@ -5,36 +5,24 @@ import java.util.Objects;
 import java.util.Set;
 
 public class Vertex {
-	public int getID() {
-		return ID;
-	}
-
 	private int ID;
-	private final Set<Vertex> neighbours = new HashSet<>();
 	private Partition partition;
+	private final Set<Vertex> neighbours = new HashSet<>();
 
 	public Vertex(int iD) {
-		super();
 		this.ID = iD;
 	}
 
-	public boolean addNeighbour(Vertex neighbour) {
-		long count = neighbour.getNeighbours().stream()
-				.filter(vertex -> vertex.getPartition().equals(partition))
-				.count();
-		if (count < partition.getD()) {
-			if(neighbour.addNeighbour(this)) {
-				neighbours.add(neighbour);
-			}
-			
-			return true;
-		} else {
-			return false;
-		}
+	public void addNeighbour(Vertex neighbour) {
+		neighbours.add(neighbour);
 	}
 
 	public Partition getPartition() {
 		return partition;
+	}
+
+	public int getID() {
+		return ID;
 	}
 
 	public Set<Vertex> getNeighbours() {

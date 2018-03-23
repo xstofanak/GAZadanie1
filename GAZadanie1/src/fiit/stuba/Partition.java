@@ -5,27 +5,22 @@ import java.util.Objects;
 
 public class Partition {
 	private int ID;
-	private int d;
+	private final ArrayList<Vertex> vertexes =  new ArrayList<>();
 
-	public Partition(int iD, int d) {
-		super();
-		ID = iD;
-		this.d = d;
-	}
-	
-	private ArrayList<Vertex> verteces =  new ArrayList<>();
-	
-	public ArrayList<Vertex> getVerteces() {
-		return verteces;
+	public Partition(int ID) {
+		this.ID = ID;
 	}
 
-	public void addVertex(Vertex a) {
-		verteces.add(a);
-		a.setPartition(this);
-	}	
-	
-	public int getD() {
-		return d;
+	public void addVertex(Vertex vertex) {
+		vertexes.add(vertex);
+	}
+
+	public ArrayList<Vertex> getVertexes() {
+		return vertexes;
+	}
+
+	public int getID() {
+		return ID;
 	}
 
 	@Override
