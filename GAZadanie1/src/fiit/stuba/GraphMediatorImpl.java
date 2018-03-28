@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 /**
  * One instance of graph with partitions and vertexes.
  */
+@SuppressWarnings("ConstantConditions")
 public class GraphMediatorImpl implements GraphMediator {
     /**
      * Set of all partitions (partition contains information about vertexes).
@@ -83,26 +84,35 @@ public class GraphMediatorImpl implements GraphMediator {
                 dstVertexes.stream().allMatch(neighbor -> !neighbor.getPartition().equals(srcVertex.getPartition()) &&
                         getDegreeToPartition(neighbor, srcVertex.getPartition()) < degree) &&
                 getDegreeToPartition(srcVertex, dstVertexes.stream().findAny().get().getPartition()) == 0) {
-
-            Set<Vertex> reflectedVertexes = getReflectedVertexes(srcVertex);
-            reflectedVertexes.addAll(dstVertexes.stream()
-                    .flatMap(vertex -> vertex.getNeighbours().stream()
-                            .filter(vertex1 -> vertex1.getPartition().equals(srcVertex.getPartition())))
-                    .collect(Collectors.toSet()));
-            if (getCountOfAvailableNeighbours(srcVertex) * degree >=
-                    getCountOfNonCoveredVertexes(srcVertex.getPartition(), reflectedVertexes)) {
-                // testing of solvability - minimum degree vs count of free degrees in partition
-                Partition dstPartition = dstVertexes.stream().findAny().get().getPartition();
-                Map<Vertex, Integer> mappedDegrees = getPartitionCopyWithDegrees(srcVertex.getPartition(), dstPartition);
-                dstVertexes.forEach(vertex -> {
-                    int originalDegree = mappedDegrees.get(vertex);
-                    int newDegree = originalDegree + 1;
-                    mappedDegrees.replace(vertex, newDegree);
-                });
-                // testing of solvability - access from srcVertex to other vertexes in partition
-                if ((degree - getMinDegree(mappedDegrees)) * degree <= getCountOfFreeDegrees(mappedDegrees)) {
-                    // ---- to do: testing of solvability - access from root vertex to last partition ----
-                    return true;
+            Partition remotePartition = dstVertexes.stream().findAny().get().getPartition();
+            Partition localPartition = srcVertex.getPartition();
+            Set<Partition> partitions = new HashSet<>(partitionSet);
+            partitions.remove(remotePartition);
+            partitions.remove(localPartition);
+            Set<Integer> grandpas = getPartitionNeighbours(partitions.stream().findFirst().get(), srcVertex);
+            boolean match = dstVertexes.stream().anyMatch(vertex -> grandpas.contains(vertex.getGrandPa().getID()));
+            // testing of solvability - access from grandpa vertex to last partition
+            if(!match) {
+                Set<Vertex> reflectedVertexes = getReflectedVertexes(srcVertex);
+                reflectedVertexes.addAll(dstVertexes.stream()
+                        .flatMap(vertex -> vertex.getNeighbours().stream()
+                                .filter(vertex1 -> vertex1.getPartition().equals(srcVertex.getPartition())))
+                        .collect(Collectors.toSet()));
+                if (getCountOfAvailableNeighbours(srcVertex) * degree >=
+                        getCountOfNonCoveredVertexes(srcVertex.getPartition(), reflectedVertexes)) {
+                    // testing of solvability - minimum degree vs count of free degrees in partition
+                    Partition dstPartition = dstVertexes.stream().findAny().get().getPartition();
+                    Map<Vertex, Integer> mappedDegrees = getPartitionCopyWithDegrees(srcVertex.getPartition(),
+                            dstPartition);
+                    dstVertexes.forEach(vertex -> {
+                        int originalDegree = mappedDegrees.get(vertex);
+                        int newDegree = originalDegree + 1;
+                        mappedDegrees.replace(vertex, newDegree);
+                    });
+                    // testing of solvability - access from srcVertex to other vertexes in partition
+                    if ((degree - getMinDegree(mappedDegrees)) * degree <= getCountOfFreeDegrees(mappedDegrees)) {
+                        return true;
+                    }
                 }
             }
         }
@@ -151,5 +161,12 @@ public class GraphMediatorImpl implements GraphMediator {
 
     private int getCountOfNonCoveredVertexes(Partition partition, Set<Vertex> vertexSet) {
         return partition.getVertexes().size() - vertexSet.size();
+    }
+
+    private Set<Integer> getPartitionNeighbours(Partition partition, Vertex vertex) {
+        return vertex.getNeighbours().stream()
+                .filter(vertex1 -> vertex1.getPartition().equals(partition))
+                .map(Vertex::getID)
+                .collect(Collectors.toSet());
     }
 }
