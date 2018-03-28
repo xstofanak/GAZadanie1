@@ -29,8 +29,24 @@ public class GraphUtils {
      */
     private static void createCombinations(List<Vertex> vertexes, List<Vertex> data, int start, int end, int index,
                                            int r, List<List<Vertex>> output) {
-        if(index == r) {
+    	
+    	if(index == r) {
             List<Vertex> copyOfData = new ArrayList<>(data);
+            output.add(copyOfData);
+            return;
+        }
+        for (int i = start; i <= end && end - i + 1 >= r - index; i++) {
+            data.set(index, vertexes.get(i));
+            createCombinations(vertexes, data, i + 1, end, index + 1, r, output);
+        }
+    }
+    
+    //deleting overlapping combinations
+    private static void createNonOverlappingCombinations(List<Vertex> vertexes, List<Vertex> data, int start, int end, int index,
+            											int r, List<List<Vertex>> output) {
+    	if(index == r) {
+            List<Vertex> copyOfData = new ArrayList<>(data);
+            
             output.add(copyOfData);
             return;
         }

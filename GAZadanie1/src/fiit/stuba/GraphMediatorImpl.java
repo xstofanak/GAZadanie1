@@ -7,7 +7,6 @@ import java.util.stream.Collectors;
 /**
  * One instance of graph with partitions and vertexes.
  */
-@SuppressWarnings("ConstantConditions")
 public class GraphMediatorImpl implements GraphMediator {
     /**
      * Set of all partitions (partition contains information about vertexes).
