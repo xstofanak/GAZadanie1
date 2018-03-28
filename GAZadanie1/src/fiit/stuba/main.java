@@ -19,7 +19,7 @@ public class main {
         // generation of empty graph
         GraphBuilder graphBuilder = new GraphBuilder();
         GraphMediator graph = graphBuilder.generateEmptyMaxGraph(numberOfD);
-        List<Vertex> vertexList = graph.getVertexesOfPartition(0);
+        List<Vertex> vertexList = graph.getVertexesOfPartition(1);
 
         // printing of combinations from one partition
         List<List<Vertex>> combinations = GraphUtils.createCombinations(vertexList, numberOfD);

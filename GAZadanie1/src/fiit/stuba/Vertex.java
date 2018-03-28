@@ -7,6 +7,16 @@ import java.util.Set;
 public class Vertex {
 	private int ID;
 	private Partition partition;
+	private Vertex grandPa;
+	
+	public Vertex getGrandPa() {
+		return grandPa;
+	}
+
+	public void setGrandPa(Vertex grandPa) {
+		this.grandPa = grandPa;
+	}
+
 	private final Set<Vertex> neighbours = new HashSet<>();
 
 	public Vertex(int iD) {
