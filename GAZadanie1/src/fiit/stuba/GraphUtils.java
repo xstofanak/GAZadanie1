@@ -1,6 +1,9 @@
 package fiit.stuba;
 
+import javafx.util.Pair;
+
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class GraphUtils {
     /**
@@ -9,14 +12,16 @@ public class GraphUtils {
      * @param degree - Length of one combinations in number of elements.
      * @return Generated set of combinations.
      */
-    public static List<List<Vertex>> createCombinations(List<Vertex> vertexes, int degree) {
+    public static Map<List<Vertex>, Boolean> createCombinations(List<Vertex> vertexes, int degree) {
         int start = 0;
         int end = vertexes.size() - 1;
         int index = 0;
         List<List<Vertex>> output = new ArrayList<>();
         List<Vertex> startData = new ArrayList<>(Collections.nCopies(degree, null));
         createCombinations(vertexes, startData, start, end, index, degree, output);
-        return output;
+        return output.stream()
+                .map(vertices -> new Pair<>(vertices, false))
+                .collect(Collectors.toMap(Pair::getKey, Pair::getValue));
     }
 
     /**

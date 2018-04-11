@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.List;
+import java.util.Map;
 
 public class main {
 
@@ -25,20 +26,20 @@ public class main {
 
         
         // printing of combinations from one partition
-        List<List<Vertex>> combinations0 = GraphUtils.createCombinations(vertexList0, numberOfD);
-        List<List<Vertex>> combinations1 = GraphUtils.createCombinations(vertexList1, numberOfD);
-        List<List<Vertex>> combinations2 = GraphUtils.createCombinations(vertexList2, numberOfD);
+        Map<List<Vertex>, Boolean> combinations0 = GraphUtils.createCombinations(vertexList0, numberOfD);
+        Map<List<Vertex>, Boolean> combinations1 = GraphUtils.createCombinations(vertexList1, numberOfD);
+        Map<List<Vertex>, Boolean> combinations2 = GraphUtils.createCombinations(vertexList2, numberOfD);
         
         //printCombination(combinations);
         
         for(int vertexIndex = 0; vertexIndex < vertexList0.size(); vertexIndex++) {
-        	
-        	for(int partition1 = 0; partition1 < combinations1.size(); partition1++) {	
+        	for(int partition1 = 0; partition1 < combinations1.size(); partition1++) {
+        	    
         		for(int partition2 = 0; partition2 < combinations2.size(); partition2++) {
         			for(int partition0 = 0; partition0 < combinations0.size(); partition0++) {
         				
         				Vertex vertex = vertexList0.get(vertexIndex);
-        				List<Vertex> vertexesPartition1 = combinations1.get(partition1);
+//        				List<Vertex> vertexesPartition1 = combinations1.get(partition1);
         				
         				
         			
