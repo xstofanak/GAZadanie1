@@ -3,6 +3,8 @@ package fiit.stuba;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -26,24 +28,50 @@ public class main {
 
         
         // printing of combinations from one partition
-        Map<List<Vertex>, Boolean> combinations0 = GraphUtils.createCombinations(vertexList0, numberOfD);
-        Map<List<Vertex>, Boolean> combinations1 = GraphUtils.createCombinations(vertexList1, numberOfD);
-        Map<List<Vertex>, Boolean> combinations2 = GraphUtils.createCombinations(vertexList2, numberOfD);
+        List<CombinationsEntry> combinations0 = GraphUtils.createCombinations(vertexList0, numberOfD);
+        List<CombinationsEntry> combinations1 = GraphUtils.createCombinations(vertexList1, numberOfD);
+        List<CombinationsEntry> combinations2 = GraphUtils.createCombinations(vertexList2, numberOfD);
         
-        //printCombination(combinations);
-        
+        //select first vertex
         for(int vertexIndex = 0; vertexIndex < vertexList0.size(); vertexIndex++) {
+        	//go from partition0 to partition 1 
         	for(int partition1 = 0; partition1 < combinations1.size(); partition1++) {
-
-        		for(int partition2 = 0; partition2 < combinations2.size(); partition2++) {
-        			for(int partition0 = 0; partition0 < combinations0.size(); partition0++) {
-        				
-        				Vertex vertex = vertexList0.get(vertexIndex);
-//        				List<Vertex> vertexesPartition1 = combinations1.get(partition1);
-        				
-        				
-        			
+        		//check neighbor and flag for used combination 
+        		if(combinations1.get(partition1).getFlag() == false && 
+        				graph.testNeighbours(vertexList0.get(vertexIndex), new HashSet<>(combinations1.get(partition1).getCombinationList()))) {
+        			for(int j = 0; j < numberOfD; j++) {
+        				graph.addNeighbors(vertexList0.get(vertexIndex), combinations1.get(partition1).getCombinationList().get(j));
         			}
+        			
+        			combinations1.get(partition1).setFlag(true);	
+        			
+        			//go from partition1 to partition 2
+        			for(int partition2 = 0; partition2 < combinations2.size(); partition2++) {
+        				//check neighbor and flag for used combination
+        				if(combinations2.get(partition2).getFlag() == false && 
+                				graph.testNeighbours(vertexList1.get(vertexIndex), new HashSet<>(combinations2.get(partition2).getCombinationList()))) {
+        					
+        					for(int j = 0; j < numberOfD; j++) {
+                				graph.addNeighbors(vertexList1.get(vertexIndex), combinations2.get(partition2).getCombinationList().get(j));
+                			}
+        					
+        					combinations2.get(partition2).setFlag(true);
+        					
+        					//go from partition2 to partition 0
+        					for(int partition0 = 0; partition0 < combinations0.size(); partition0++) {
+        						//check neighbor and flag for used combination
+        						if(combinations0.get(partition0).getFlag() == false && 
+                        				graph.testNeighbours(vertexList2.get(vertexIndex), new HashSet<>(combinations0.get(partition0).getCombinationList()))) {
+                				
+        							for(int j = 0; j < numberOfD; j++) {
+        		        				graph.addNeighbors(vertexList2.get(vertexIndex), combinations2.get(partition2).getCombinationList().get(j));
+        		        			}
+        							
+        							combinations0.get(partition0).setFlag(true);
+        						}
+                			}
+        				}
+            		}
         		}
         	}
         }

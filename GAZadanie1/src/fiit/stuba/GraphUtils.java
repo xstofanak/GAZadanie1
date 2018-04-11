@@ -12,7 +12,7 @@ public class GraphUtils {
      * @param degree - Length of one combinations in number of elements.
      * @return Generated set of combinations.
      */
-    public static Map<List<Vertex>, Boolean> createCombinations(List<Vertex> vertexes, int degree) {
+    public static List<CombinationsEntry> createCombinations(List<Vertex> vertexes, int degree) {
         int start = 0;
         int end = vertexes.size() - 1;
         int index = 0;
@@ -20,8 +20,8 @@ public class GraphUtils {
         List<Vertex> startData = new ArrayList<>(Collections.nCopies(degree, null));
         createCombinations(vertexes, startData, start, end, index, degree, output);
         return output.stream()
-                .map(vertices -> new Pair<>(vertices, false))
-                .collect(Collectors.toMap(Pair::getKey, Pair::getValue));
+                .map(vertices -> new CombinationsEntry(vertices, false))
+                .collect(Collectors.toList());
     }
 
     /**
