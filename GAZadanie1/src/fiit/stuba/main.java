@@ -34,7 +34,7 @@ public class main {
         
         for(int vertexIndex = 0; vertexIndex < vertexList0.size(); vertexIndex++) {
         	for(int partition1 = 0; partition1 < combinations1.size(); partition1++) {
-        	    
+
         		for(int partition2 = 0; partition2 < combinations2.size(); partition2++) {
         			for(int partition0 = 0; partition0 < combinations0.size(); partition0++) {
         				
