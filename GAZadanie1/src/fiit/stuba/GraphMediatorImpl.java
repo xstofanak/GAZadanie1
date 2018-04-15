@@ -22,7 +22,7 @@ public class GraphMediatorImpl implements GraphMediator {
      * Construction of new empty graph.
      * @param degree Degree of each vertex against one partition (total degree = 2 * degree).
      */
-    public GraphMediatorImpl(int degree) {
+    GraphMediatorImpl(int degree) {
         this.degree = degree;
     }
 
@@ -71,6 +71,29 @@ public class GraphMediatorImpl implements GraphMediator {
     }
 
     /**
+     * Adding of new neighbourhood between one vertex and collection of vertexes.
+     * @param srcVertex - First vertex.
+     * @param dstVertexes - Group of neighbors.
+     */
+    @Override
+    public void addNeighbors(Vertex srcVertex, Collection<Vertex> dstVertexes) {
+        dstVertexes.forEach(dstVertex -> addNeighbors(srcVertex, dstVertex));
+    }
+
+    /**
+     * Testing of neighbours between source partition and destination vertexes before they are inserted into graph.
+     * @param srcPartition - Source partition.
+     * @param dstVertexes - Group of destination vertexes (size of degree determines dstVertexes).
+     * @return True if any source vertex of the partition can be connected to destination group of vertexes and
+     * the graph is still solvable against all constraints.
+     */
+    @Override
+    public boolean testNeighboursConsistency(Partition srcPartition, Collection<Vertex> dstVertexes) {
+        return dstVertexes.stream().allMatch(neighbor ->
+                getDegreeToPartition(neighbor, srcPartition) < degree);
+    }
+
+    /**
      * Testing of neighbours between source and destination vertexes before they are inserted into graph.
      * @param srcVertex - Vertex from which we test neighbourhoods to other vertexes.
      * @param dstVertexes - Group of destination vertexes (size of degree determines dstVertexes).
@@ -78,12 +101,10 @@ public class GraphMediatorImpl implements GraphMediator {
      * solvable against all constraints.
      */
     @Override
-    public boolean testNeighbours(Vertex srcVertex, Set<Vertex> dstVertexes) {
-        // testing of degree, neighbor's partition, and degrees of vertexes
-        if (dstVertexes.size() == degree &&
-                dstVertexes.stream().allMatch(neighbor -> !neighbor.getPartition().equals(srcVertex.getPartition()) &&
-                        getDegreeToPartition(neighbor, srcVertex.getPartition()) < degree) &&
-                getDegreeToPartition(srcVertex, dstVertexes.stream().findAny().get().getPartition()) == 0) {
+    public boolean testNeighbours(Vertex srcVertex, Collection<Vertex> dstVertexes) {
+        // testing of degrees of vertexes
+        if (getDegreeToPartition(srcVertex, dstVertexes.stream().findAny().get().getPartition()) == 0) {
+            // testing of solvability - access from grandpa vertex to last partition
             Partition remotePartition = dstVertexes.stream().findAny().get().getPartition();
             Partition localPartition = srcVertex.getPartition();
             Set<Partition> partitions = new HashSet<>(partitionSet);
@@ -91,8 +112,8 @@ public class GraphMediatorImpl implements GraphMediator {
             partitions.remove(localPartition);
             Set<Integer> grandpas = getPartitionNeighbours(partitions.stream().findFirst().get(), srcVertex);
             boolean match = dstVertexes.stream().anyMatch(vertex -> grandpas.contains(vertex.getGrandPa().getID()));
-            // testing of solvability - access from grandpa vertex to last partition
             if(!match) {
+                // testing of solvability - access from srcVertex to other vertexes in partition
                 Set<Vertex> reflectedVertexes = getReflectedVertexes(srcVertex);
                 reflectedVertexes.addAll(dstVertexes.stream()
                         .flatMap(vertex -> vertex.getNeighbours().stream()
@@ -109,9 +130,9 @@ public class GraphMediatorImpl implements GraphMediator {
                         int newDegree = originalDegree + 1;
                         mappedDegrees.replace(vertex, newDegree);
                     });
-                    // testing of solvability - access from srcVertex to other vertexes in partition
-                    if ((degree - getMinDegree(mappedDegrees)) * degree <= getCountOfFreeDegrees(mappedDegrees)) {
-                        return true;
+                    if((degree - getMinDegree(mappedDegrees)) * degree <= getCountOfFreeDegrees(mappedDegrees)) {
+                        Set<Vertex> srcSet = new HashSet<>(Collections.singletonList(srcVertex));
+                        return dstVertexes.stream().allMatch(dstVertex -> testNeighbours(dstVertex, srcSet));
                     }
                 }
             }
