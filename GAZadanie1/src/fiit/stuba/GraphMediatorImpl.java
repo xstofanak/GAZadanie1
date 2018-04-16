@@ -110,9 +110,13 @@ public class GraphMediatorImpl implements GraphMediator {
             Set<Partition> partitions = new HashSet<>(partitionSet);
             partitions.remove(remotePartition);
             partitions.remove(localPartition);
-            Set<Integer> grandpas = getPartitionNeighbours(partitions.stream().findFirst().get(), srcVertex);
-            boolean match = dstVertexes.stream().anyMatch(vertex -> grandpas.contains(vertex.getGrandPa().getID()));
-            if(!match) {
+            Set<Vertex> predecessors = getPartitionNeighbours(partitions.stream().findFirst().get(), srcVertex);
+            boolean match = dstVertexes.stream().allMatch(vertex -> {
+                Set<Vertex> achievableVertexes = vertex.getAchievableVertexes();
+                achievableVertexes.retainAll(predecessors);
+                return achievableVertexes.isEmpty();
+            });
+            if(match) {
                 // testing of solvability - access from srcVertex to other vertexes in partition
                 Set<Vertex> reflectedVertexes = getReflectedVertexes(srcVertex);
                 reflectedVertexes.addAll(dstVertexes.stream()
@@ -184,10 +188,9 @@ public class GraphMediatorImpl implements GraphMediator {
         return partition.getVertexes().size() - vertexSet.size();
     }
 
-    private Set<Integer> getPartitionNeighbours(Partition partition, Vertex vertex) {
+    private Set<Vertex> getPartitionNeighbours(Partition partition, Vertex vertex) {
         return vertex.getNeighbours().stream()
                 .filter(vertex1 -> vertex1.getPartition().equals(partition))
-                .map(Vertex::getID)
                 .collect(Collectors.toSet());
     }
 }

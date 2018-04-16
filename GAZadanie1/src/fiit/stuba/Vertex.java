@@ -3,44 +3,41 @@ package fiit.stuba;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class Vertex {
 	private int ID;
 	private Partition partition;
-	private Vertex grandPa;
-	
-	public Vertex getGrandPa() {
-		return grandPa;
-	}
-
-	public void setGrandPa(Vertex grandPa) {
-		this.grandPa = grandPa;
-	}
-
+	private final Set<Vertex> achievableVertexes = new HashSet<>();
 	private final Set<Vertex> neighbours = new HashSet<>();
 
-	public Vertex(int iD) {
+	Vertex(int iD) {
 		this.ID = iD;
 	}
 
-	public void addNeighbour(Vertex neighbour) {
+	void addNeighbour(Vertex neighbour) {
 		neighbours.add(neighbour);
+		achievableVertexes.add(neighbour);
+		achievableVertexes.addAll(neighbour.getNeighbours().stream()
+            .filter(vertex -> !vertex.getPartition().equals(neighbour.getPartition())
+                && !vertex.getPartition().equals(partition))
+            .collect(Collectors.toSet()));
 	}
 
-	public Partition getPartition() {
+	Partition getPartition() {
 		return partition;
 	}
 
-	public int getID() {
-		return ID;
-	}
-
-	public Set<Vertex> getNeighbours() {
+	Set<Vertex> getNeighbours() {
 		return neighbours;
 	}
 
-	public void setPartition(Partition partition) {
+	void setPartition(Partition partition) {
 		this.partition = partition;
+	}
+
+	Set<Vertex> getAchievableVertexes() {
+		return achievableVertexes;
 	}
 
 	@Override
