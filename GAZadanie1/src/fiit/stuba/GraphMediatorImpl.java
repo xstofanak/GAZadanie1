@@ -101,7 +101,7 @@ public class GraphMediatorImpl implements GraphMediator {
      * solvable against all constraints.
      */
     @Override
-    public boolean testNeighbours(Vertex srcVertex, Collection<Vertex> dstVertexes) {
+    public boolean testNeighbours(Vertex srcVertex, Collection<Vertex> dstVertexes, boolean testNeighbors) {
         // testing of degrees of vertexes
         if (getDegreeToPartition(srcVertex, dstVertexes.stream().findAny().get().getPartition()) == 0) {
             // testing of solvability - access from grandpa vertex to last partition
@@ -129,14 +129,16 @@ public class GraphMediatorImpl implements GraphMediator {
                     Partition dstPartition = dstVertexes.stream().findAny().get().getPartition();
                     Map<Vertex, Integer> mappedDegrees = getPartitionCopyWithDegrees(srcVertex.getPartition(),
                             dstPartition);
-                    dstVertexes.forEach(vertex -> {
-                        int originalDegree = mappedDegrees.get(vertex);
-                        int newDegree = originalDegree + 1;
-                        mappedDegrees.replace(vertex, newDegree);
-                    });
+                    int originalDegree = mappedDegrees.get(srcVertex);
+                    mappedDegrees.replace(srcVertex, dstVertexes.size() + originalDegree);
                     if((degree - getMinDegree(mappedDegrees)) * degree <= getCountOfFreeDegrees(mappedDegrees)) {
-                        Set<Vertex> srcSet = new HashSet<>(Collections.singletonList(srcVertex));
-                        return dstVertexes.stream().allMatch(dstVertex -> testNeighbours(dstVertex, srcSet));
+                        if(testNeighbors) {
+                            Set<Vertex> srcSet = new HashSet<>(Collections.singletonList(srcVertex));
+                            return dstVertexes.stream().allMatch(dstVertex -> testNeighbours(
+                                    dstVertex, srcSet, false));
+                        } else {
+                            return true;
+                        }
                     }
                 }
             }

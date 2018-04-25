@@ -10,5 +10,5 @@ public interface GraphMediator {
     void addVertex(Partition partition, Vertex vertex);
     void addNeighbors(Vertex vertex1, Vertex vertex2);
     boolean testNeighboursConsistency(Partition srcPartition, Collection<Vertex> dstVertexes);
-    boolean testNeighbours(Vertex srcVertex, Collection<Vertex> dstVertexes);
+    boolean testNeighbours(Vertex srcVertex, Collection<Vertex> dstVertexes, boolean testNeighbors);
 }

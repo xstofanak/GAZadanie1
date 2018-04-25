@@ -51,7 +51,7 @@ public class Main {
                 if (!aCombinations1.getFlag()) {
                     final Set<Vertex> set = new HashSet<>(aCombinations1.getCombinationList());
                     if (graph.testNeighboursConsistency(aVertexList0.getPartition(), set)) {
-                        if (graph.testNeighbours(aVertexList0, set)) {
+                        if (graph.testNeighbours(aVertexList0, set, true)) {
                             graph.addNeighbors(aVertexList0, set);
                             setCombination = true;
                             break;
