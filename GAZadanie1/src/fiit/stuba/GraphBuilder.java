@@ -11,7 +11,7 @@ public class GraphBuilder {
      * @param degree - Degree of one vertex to one other partition.
      * @return - Generated graph.
      */
-    public GraphMediator generateEmptyMaxGraph(int degree) {
+    public Graph generateEmptyMaxGraph(int degree) {
         int numberOfVertexes = getMaxVertexes(degree);
         return generateEmptyGraph(degree, numberOfVertexes);
     }
@@ -22,8 +22,8 @@ public class GraphBuilder {
      * @param numberOfVertexes - Number of vertexes per partition.
      * @return - Generated graph.
      */
-    public GraphMediator generateEmptyGraph(int degree, int numberOfVertexes) {
-        GraphMediator graphMediator = new GraphMediatorImpl(degree);
+    public Graph generateEmptyGraph(int degree, int numberOfVertexes) {
+        Graph graphMediator = new GraphImpl(degree);
         AtomicInteger counter = new AtomicInteger(0);
         for(int i = 0; i < 3; i++) {
             Partition partition = new Partition(i);

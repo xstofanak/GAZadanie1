@@ -8,7 +8,6 @@ import java.util.stream.Collectors;
 public class Vertex {
 	private int ID;
 	private Partition partition;
-	private final Set<Vertex> achievableVertexes = new HashSet<>();
 	private final Set<Vertex> neighbours = new HashSet<>();
 
 	Vertex(int iD) {
@@ -17,11 +16,6 @@ public class Vertex {
 
 	void addNeighbour(Vertex neighbour) {
 		neighbours.add(neighbour);
-		achievableVertexes.add(neighbour);
-		achievableVertexes.addAll(neighbour.getNeighbours().stream()
-            .filter(vertex -> !vertex.getPartition().equals(neighbour.getPartition())
-                && !vertex.getPartition().equals(partition))
-            .collect(Collectors.toSet()));
 	}
 
 	Partition getPartition() {
@@ -36,8 +30,8 @@ public class Vertex {
 		this.partition = partition;
 	}
 
-	Set<Vertex> getAchievableVertexes() {
-		return achievableVertexes;
+	public int getID() {
+		return ID;
 	}
 
 	@Override

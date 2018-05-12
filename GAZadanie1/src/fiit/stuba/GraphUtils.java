@@ -1,7 +1,5 @@
 package fiit.stuba;
 
-import javafx.util.Pair;
-
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -12,7 +10,7 @@ public class GraphUtils {
      * @param degree - Length of one combinations in number of elements.
      * @return Generated set of combinations.
      */
-    public static List<CombinationsEntry> createCombinations(List<Vertex> vertexes, int degree) {
+    public static List<Combination> createCombinations(List<Vertex> vertexes, int degree) {
         int start = 0;
         int end = vertexes.size() - 1;
         int index = 0;
@@ -20,7 +18,7 @@ public class GraphUtils {
         List<Vertex> startData = new ArrayList<>(Collections.nCopies(degree, null));
         createCombinations(vertexes, startData, start, end, index, degree, output);
         return output.stream()
-                .map(vertices -> new CombinationsEntry(vertices, false))
+                .map(vertices -> new Combination(new HashSet<>(vertices)))
                 .collect(Collectors.toList());
     }
 
@@ -34,7 +32,6 @@ public class GraphUtils {
      */
     private static void createCombinations(List<Vertex> vertexes, List<Vertex> data, int start, int end, int index,
                                            int r, List<List<Vertex>> output) {
-    	
     	if(index == r) {
             List<Vertex> copyOfData = new ArrayList<>(data);
             output.add(copyOfData);
@@ -44,15 +41,5 @@ public class GraphUtils {
             data.set(index, vertexes.get(i));
             createCombinations(vertexes, data, i + 1, end, index + 1, r, output);
         }
-    }
-    
-    //deleting overlapping combinations
-    private static void createNonOverlappingCombinations(int d) {
-    	
-    	for(int i = 0; i < d - 1; i++) {
-    		for(int j = 0; j <  - 1; j++) {
-    			
-    		}
-    	}
     }
 }
